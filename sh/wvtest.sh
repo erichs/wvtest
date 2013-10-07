@@ -41,17 +41,32 @@ _wvcheck()
 	CODE="$1"
 	TEXT=$(_wvtextclean "$2")
 	OK=ok
-	if [ "$CODE" -ne 0 ]; then
+	if [ "$CODE" != "0" ]; then
 		OK=FAILED
 	fi
-	echo "! $WVCALLER_FILE:$WVCALLER_LINE  $TEXT  $OK" >&2
-	if [ "$CODE" -ne 0 ]; then
+  echo "! $(_wvshell) $WVCALLER_FILE:$WVCALLER_LINE  $TEXT  $OK" >&2
+	if [ "$CODE" != "0" ]; then
 		exit $CODE
 	else
 		return 0
 	fi
 }
 
+_wvshell()
+{
+  # here's a hack I modified from a StackOverflow post:
+  # we loop over the ps listing for the current process ($$), and print the last column (CMD)
+  # stripping any leading hyphens bash sometimes throws in there
+  this="$(ps -p $$ -o cmd --no-headers)"
+  if [ $(echo "$this" | wc -w) -eq 2 ]; then
+    this=${this%% *}   # e.g. /bin/bash test.sh => /bin/bash
+    echo "${this##*/}" # e.g. /bin/bash => bash
+  else
+    this="${this##*/}"  # e.g. /bin/bash => bash
+    echo "${this//-/}" # e.g. -zsh => zsh
+  fi
+  unset this
+}
 
 WVPASS()
 {
@@ -136,5 +151,5 @@ WVSTART()
 {
 	echo >&2
 	_wvfind_caller
-	echo "Testing \"$*\" in $WVCALLER_FILE:" >&2
+  echo "Testing \"$(_wvcheck): $*\" in $WVCALLER_FILE:" >&2
 }
