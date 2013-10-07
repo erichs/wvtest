@@ -4,7 +4,10 @@ all:
 	@false
 
 runtests:
-	t/twvtest.sh
+	./multi-sh t/twvtest.sh
+
+runsimple:
+	./multi-sh t/simple.sh
 
 test:
 	../wvtestrun $(MAKE) runtests

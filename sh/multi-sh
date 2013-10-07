@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# detect available testing shells
+KSH=$(which ksh 2>/dev/null)
+PDKSH=$(which pdksh 2>/dev/null)
+ZSH=$(which zsh 2>/dev/null)
+BASH=$(which bash 2>/dev/null)
+SH=$(which sh 2>/dev/null)
+ASH=$(which ash 2>/dev/null)
+DASH=$(which dash 2>/dev/null)
+
+# run wvtests against available shells
+for testshell in $BASH $KSH $PDKSH $ZSH $SH $ASH $DASH; do
+  $testshell "$@"
+  [ $? -ne 0 ] && exit $?
+done
+
+exit 0
