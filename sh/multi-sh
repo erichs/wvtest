@@ -11,7 +11,7 @@ DASH=$(which dash 2>/dev/null)
 
 # run wvtests against available shells
 for testshell in $BASH $KSH $PDKSH $ZSH $SH $ASH $DASH; do
-  $testshell "$@"
+  TESTFILE="$@" $testshell "$@"
   [ $? -ne 0 ] && exit $?
 done
 

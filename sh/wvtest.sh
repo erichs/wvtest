@@ -30,7 +30,11 @@ else
 	_wvfind_caller()
 	{
 		LVL=$1
-		WVCALLER_FILE="unknown"
+    if [ -n "$TESTFILE" ]; then
+      WVCALLER_FILE="$TESTFILE"
+    else
+      WVCALLER_FILE="unknown"
+    fi
 		WVCALLER_LINE=0
 	}
 fi
@@ -44,7 +48,7 @@ _wvcheck()
 	if [ "$CODE" != "0" ]; then
 		OK=FAILED
 	fi
-  echo "! $(_wvshell) $WVCALLER_FILE:$WVCALLER_LINE  $TEXT  $OK" >&2
+  echo "! $WVCALLER_FILE:$WVCALLER_LINE  $TEXT  $OK" >&2
 	if [ "$CODE" != "0" ]; then
 		exit $CODE
 	else
@@ -151,5 +155,5 @@ WVSTART()
 {
 	echo >&2
 	_wvfind_caller
-  echo "Testing \"$(_wvcheck): $*\" in $WVCALLER_FILE:" >&2
+  echo "Testing \"$(_wvshell): $*\" in $WVCALLER_FILE:" >&2
 }
