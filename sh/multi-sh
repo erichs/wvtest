@@ -10,7 +10,7 @@ ASH=$(which ash 2>/dev/null)
 DASH=$(which dash 2>/dev/null)
 
 # run wvtests against available shells
-for testshell in $BASH $KSH $PDKSH $ZSH $SH $ASH $DASH; do
+for testshell in $KSH $PDKSH $ZSH $SH $ASH $DASH; do
   TESTFILE="$@" $testshell "$@"
   [ $? -ne 0 ] && exit $?
 done

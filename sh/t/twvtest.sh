@@ -3,10 +3,10 @@
 
 WVSTART "main test"
 WVPASS true
-WVPASS true
+WVPASS false
 WVPASS true
 WVFAIL false
-WVPASSEQ "$(ls | sort)" "$(ls)"
+WVPASSEQ "$(echo $(ls | sort))" "$(echo $(ls))"
 WVPASSNE "5" "5 "
 WVPASSEQ "" ""
 (echo nested test; true); WVPASSRC $?

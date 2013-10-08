@@ -19,31 +19,33 @@ _wvtextclean()
 }
 
 
-if [ -n "$BASH_VERSION" ]; then
-	_wvfind_caller()
-	{
-		LVL=$1
-		WVCALLER_FILE=${BASH_SOURCE[2]}
-		WVCALLER_LINE=${BASH_LINENO[1]}
-	}
-else
-	_wvfind_caller()
-	{
-		LVL=$1
-    if [ -n "$TESTFILE" ]; then
-      WVCALLER_FILE="$TESTFILE"
-    else
-      WVCALLER_FILE="unknown"
-    fi
-		WVCALLER_LINE=0
-	}
-fi
+_wvfind_caller()
+{
+	LVL=$1
+  if [ -n "$BASH_VERSION" ]; then
+    WVCALLER_FILE=${BASH_SOURCE[2]}
+  elif [ -n "$TESTFILE" ]; then
+    WVCALLER_FILE=$TESTFILE
+  else
+    WVCALLER_FILE=unknown
+  fi
+
+
+  if [ -n "$BASH_VERSION" ]; then
+    WVCALLER_LINE=${BASH_LINENO[1]}
+  elif [ -n "$LINENO" ]; then
+    WVCALLER_LINE=$LINENO
+  else
+    WVCALLER_LINE=0
+  fi
+}
 
 
 _wvcheck()
 {
-	CODE="$1"
-	TEXT=$(_wvtextclean "$2")
+  LINE="$1"
+	CODE="$2"
+	TEXT=$(_wvtextclean "$3")
 	OK=ok
 	if [ "$CODE" != "0" ]; then
 		OK=FAILED
